@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Box
+﻿namespace Box
 {
     enum UnitOfMeasure
     {
@@ -37,7 +31,8 @@ namespace Box
 
         public UnitOfMeasure measure;
 
-        public Box(double width = 10, double length = 10, double height = 10, UnitOfMeasure measure = UnitOfMeasure.Meter)
+        public Box( double width = 10, double length = 10, double height = 10,
+                    UnitOfMeasure measure = UnitOfMeasure.Meter)
         {
             if (width < 0 || length < 0 || height < 0)
                 throw new ArgumentOutOfRangeException("Box measures out of range: negative value");
@@ -58,32 +53,86 @@ namespace Box
         // domyslnie wypisywac w metrach
         public override string ToString()
         {
-            // TODO: dokladnosc 3 miejsc
-            string returnString = $"{width} {measure} \u00D7 {length} {measure} \u00D7 {height} {measure}";
+            string returnString = $"{Math.Round(width, 3)} {measure} \u00D7 " +
+                                  $"{Math.Round(length, 3)} {measure} \u00D7 " +
+                                  $"{Math.Round(height, 3)} {measure}";
             return returnString;
         }
 
         public string ToString(string format)
         {
+            // TODO: implement using IFormattable interface
             if (format == "m")
             {
-                // dokladnosc 3 miejsc po przecinku
+                // precision 3 
+                switch (measure)
+                {
+                    case UnitOfMeasure.Meter:
+                    {
+                        return $"{width}m \u00D7 {length}m \u00D7 {height}m";
+                    }
+                    case UnitOfMeasure.Centimeter:
+                    {
+                        return $"{width * 0.1}m \u00D7 {length * 0.1}m \u00D7 {height * 0.1}m";
+                    }
+                    case UnitOfMeasure.Milimeter:
+                    {
+                         return $"{width * 0.01}m \u00D7 {length * 0.01}m \u00D7 {height * 0.01}m";
+                    }
+                }
             }
             else if (format == "cm")
             {
-                // dokladnosc 1 miejsca po przecinku
+                // precision 1
+                switch (measure)
+                {
+                    case UnitOfMeasure.Meter:
+                        {
+                            return $"{Math.Round(width * 10, 1)}cm \u00D7 " +
+                                   $"{Math.Round(length * 10, 1)}cm \u00D7 " +
+                                   $"{Math.Round(height * 10, 1)}cm";
+                        }
+                    case UnitOfMeasure.Centimeter:
+                        {
+                            return $"{Math.Round(width, 1)}cm \u00D7 " +
+                                   $"{Math.Round(length, 1)}cm \u00D7 " +
+                                   $"{Math.Round(height, 1)}cm";
+                        }
+                    case UnitOfMeasure.Milimeter:
+                        {
+                            return $"{Math.Round(width * 0.1, 1)}cm \u00D7 " +
+                                   $"{Math.Round(length * 0.1, 1)}cm \u00D7 " +
+                                   $"{Math.Round(height * 0.1, 1)}cm";
+                        }
+                }
             }
             else if (format == "mm")
             {
-                // bez miejsc po przecinku
+                switch (measure)
+                {
+                    case UnitOfMeasure.Meter:
+                        {
+                            return $"{Math.Round(width * 100, 0)}mm \u00D7 " +
+                                   $"{Math.Round(length * 100, 0)}mm \u00D7 " +
+                                   $"{Math.Round(height * 100, 1)}mm";
+                        }
+                    case UnitOfMeasure.Centimeter:
+                        {
+                            return $"{Math.Round(width * 10, 0)}mm \u00D7 " +
+                                   $"{Math.Round(length * 10, 0)}mm \u00D7 " +
+                                   $"{Math.Round(height * 10, 0)}mm";
+                        }
+                    case UnitOfMeasure.Milimeter:
+                        {
+                            return $"{Math.Round(width, 0)}mm \u00D7 " +
+                                   $"{Math.Round(length, 0)}mm \u00D7 " +
+                                   $"{Math.Round(height, 0)}mm";
+                        }
+                }
             }
             else
                 throw new FormatException();
-
-
-            throw new NotImplementedException();
+            throw new Exception();
         }
-
-
     }
 }

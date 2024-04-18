@@ -11,21 +11,21 @@
         public double width
         {
             get => _width;
-            set => _width = Math.Round(value, 3);
+            set => _width = value;
         }
         private double _width;
 
         public double length
         {
             get => _length;
-            set => _length = Math.Round(value, 3);
+            set => _length = value;
         }
         private double _length;
         
         public double height
         {
             get => _height;
-            set => _height = Math.Round(value, 3);
+            set => _height = value;
         }
         private double _height;
 
@@ -50,9 +50,10 @@
             this.measure = measure;
         }
 
-        // domyslnie wypisywac w metrach
+
         public override string ToString()
         {
+            // TODO: default in meters
             string returnString = $"{Math.Round(width, 3)} {measure} \u00D7 " +
                                   $"{Math.Round(length, 3)} {measure} \u00D7 " +
                                   $"{Math.Round(height, 3)} {measure}";
@@ -69,16 +70,24 @@
                 {
                     case UnitOfMeasure.Meter:
                     {
-                        return $"{width}m \u00D7 {length}m \u00D7 {height}m";
+                        return $"{Math.Round(width, 3)}m \u00D7 " +
+                               $"{Math.Round(length, 3)}m \u00D7 " +
+                               $"{Math.Round(height, 3)}m";
                     }
                     case UnitOfMeasure.Centimeter:
                     {
-                        return $"{width * 0.1}m \u00D7 {length * 0.1}m \u00D7 {height * 0.1}m";
+                        return $"{Math.Round(width * 0.1, 3)}m \u00D7 " +
+                               $"{Math.Round(length * 0.01, 3)}m \u00D7 " +
+                               $"{Math.Round(height * 0.01), 3}m";
                     }
                     case UnitOfMeasure.Milimeter:
                     {
-                         return $"{width * 0.01}m \u00D7 {length * 0.01}m \u00D7 {height * 0.01}m";
-                    }
+                         return $"{Math.Round(width * 0.01, 3)}m \u00D7 " +
+                                $"{Math.Round(length * 0.001, 3)}m \u00D7 " +
+                                $"{Math.Round(height * 0.001, 3)}m";
+                        }
+                    default:
+                        throw new InvalidOperationException("Invalid unit of measure");
                 }
             }
             else if (format == "cm")
@@ -88,9 +97,9 @@
                 {
                     case UnitOfMeasure.Meter:
                         {
-                            return $"{Math.Round(width * 10, 1)}cm \u00D7 " +
-                                   $"{Math.Round(length * 10, 1)}cm \u00D7 " +
-                                   $"{Math.Round(height * 10, 1)}cm";
+                            return $"{Math.Round(width * 100, 1)}cm \u00D7 " +
+                                   $"{Math.Round(length * 100, 1)}cm \u00D7 " +
+                                   $"{Math.Round(height * 100, 1)}cm";
                         }
                     case UnitOfMeasure.Centimeter:
                         {
@@ -104,6 +113,8 @@
                                    $"{Math.Round(length * 0.1, 1)}cm \u00D7 " +
                                    $"{Math.Round(height * 0.1, 1)}cm";
                         }
+                    default:
+                        throw new InvalidOperationException("Invalid unit of measure");
                 }
             }
             else if (format == "mm")
@@ -112,15 +123,15 @@
                 {
                     case UnitOfMeasure.Meter:
                         {
-                            return $"{Math.Round(width * 100, 0)}mm \u00D7 " +
-                                   $"{Math.Round(length * 100, 0)}mm \u00D7 " +
-                                   $"{Math.Round(height * 100, 1)}mm";
+                            return $"{Math.Round(width * 1000, 0)}mm \u00D7 " +
+                                   $"{Math.Round(length * 1000, 0)}mm \u00D7 " +
+                                   $"{Math.Round(height * 1000, 1)}mm";
                         }
                     case UnitOfMeasure.Centimeter:
                         {
-                            return $"{Math.Round(width * 10, 0)}mm \u00D7 " +
-                                   $"{Math.Round(length * 10, 0)}mm \u00D7 " +
-                                   $"{Math.Round(height * 10, 0)}mm";
+                            return $"{Math.Round(width * 100, 0)}mm \u00D7 " +
+                                   $"{Math.Round(length * 100, 0)}mm \u00D7 " +
+                                   $"{Math.Round(height * 100, 0)}mm";
                         }
                     case UnitOfMeasure.Milimeter:
                         {
@@ -128,11 +139,61 @@
                                    $"{Math.Round(length, 0)}mm \u00D7 " +
                                    $"{Math.Round(height, 0)}mm";
                         }
+                    default:
+                        throw new InvalidOperationException("Invalid unit of measure");
                 }
             }
             else
                 throw new FormatException();
-            throw new Exception();
         }
+
+        public double Volume
+        {
+            get
+            {
+                switch (measure)
+                {
+                    case (UnitOfMeasure.Meter):
+                    {
+                        return Math.Round(width * length * height, 9);
+                    }
+                    case (UnitOfMeasure.Centimeter):
+                    {
+                        return Math.Round(width * length * height * 0.000001, 9);
+                    }
+                    case (UnitOfMeasure.Milimeter):
+                    {
+                        return Math.Round(width * length * height * 0.000000001, 9);
+                    }
+                    default:
+                        throw new InvalidOperationException("Invalid unit of measure");
+                }
+            }
+        }
+
+        public double Area
+        {
+            get
+            {
+                switch (measure)
+                {
+                    case (UnitOfMeasure.Meter):
+                        {
+                            return Math.Round(2 * (width*length + width*height + length*height), 6);
+                        }
+                    case (UnitOfMeasure.Centimeter):
+                        {
+                            return Math.Round(2 * (width * length + width * height + length * height) * 0.0001, 6);
+                        }
+                    case (UnitOfMeasure.Milimeter):
+                        {
+                            return Math.Round(2 * (width * length + width * height + length * height) * 0.000001, 6);
+                        }
+                    default:
+                        throw new InvalidOperationException("Invalid unit of measure");
+                }
+            }
+        }
+
     }
 }
